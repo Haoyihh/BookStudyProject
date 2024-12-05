@@ -31,6 +31,7 @@ JOIN SPACE s ON b.BOOKING_ID = s.BOOKING_ID
 JOIN BUILDING bl ON s.BUILDING_ID = bl.BUILDING_ID
 ORDER BY s.SPACE_ID, b.BOOKING_START_DATE;
 
+select * from Space_Wise_Booking_Report;
 
 -- 2)Current_Booking_Status
 CREATE OR REPLACE VIEW Current_Booking_Status AS
@@ -54,6 +55,7 @@ LEFT JOIN BOOKING b ON s.BOOKING_ID = b.BOOKING_ID
 LEFT JOIN CUSTOMER c ON b.CUSTOMER_ID = c.CUSTOMER_ID
 ORDER BY s.SPACE_ID;
 
+select * from Current_Booking_Status;
 
 -- 3)Customer_Payment_Report
 CREATE OR REPLACE VIEW Customer_Payment_Report AS
@@ -93,6 +95,8 @@ JOIN
     CUSTOMER c ON cm.CUSTOMER_ID = c.CUSTOMER_ID
 ORDER BY 
     m.MEMBERSHIP_ID, c.CUSTOMER_ID;
+    
+select * from MEMBERSHIP_PAYMENT_CHART;
 
 
 ---------- Customer View ----------
@@ -106,7 +110,7 @@ SELECT
 FROM 
 MEMBERSHIP;
 
-   
+select * from PAYMENT_CHART;   
     
 --  2) Space_review: A view to show customer ratings and reviews of a particular space.
 CREATE OR REPLACE VIEW SPACE_REVIEW AS
@@ -123,4 +127,4 @@ LEFT JOIN
 ORDER BY 
     s.SPACE_ID;
     
- 
+select * from SPACE_REVIEW;    
