@@ -1,3 +1,5 @@
+-- Creating required procedures and functions for Book my study Customer Management
+
 CREATE OR REPLACE PACKAGE CUSTOMER_MANAGEMENT AS
     -- Procedure to register a new customer
     PROCEDURE REGISTER_CUSTOMER(
