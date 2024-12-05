@@ -7,8 +7,9 @@ SET AUTOCOMMIT ON;
 CLEAR SCREEN;
 SET SERVEROUTPUT ON;
 
+--------- Manager View ---------
 
--- 1) Manager View : Space_Wise_Booking_Report 
+-- 1)Space_Wise_Booking_Report 
 CREATE OR REPLACE VIEW Space_Wise_Booking_Report AS
 SELECT 
     b.BOOKING_ID,
@@ -31,7 +32,7 @@ JOIN BUILDING bl ON s.BUILDING_ID = bl.BUILDING_ID
 ORDER BY s.SPACE_ID, b.BOOKING_START_DATE;
 
 
--- 2) Manager View : Current_Booking_Status
+-- 2)Current_Booking_Status
 CREATE OR REPLACE VIEW Current_Booking_Status AS
 SELECT 
     s.SPACE_ID,
@@ -54,8 +55,7 @@ LEFT JOIN CUSTOMER c ON b.CUSTOMER_ID = c.CUSTOMER_ID
 ORDER BY s.SPACE_ID;
 
 
-
--- 3) Manager View : Customer_Payment_Report
+-- 3)Customer_Payment_Report
 CREATE OR REPLACE VIEW Customer_Payment_Report AS
 SELECT 
     p.PAYMENT_ID,
@@ -71,73 +71,12 @@ FROM
     PAYMENT p
 JOIN BOOKING bk ON p.BOOKING_ID = bk.BOOKING_ID
 JOIN CUSTOMER c ON bk.CUSTOMER_ID = c.CUSTOMER_ID
-ORDER BY p.PAYMENT_DATE DESC;
+ORDER BY p.PAYMENT_DATE;
 
+select * from customer_payment_report;
 
-
---  1)⁠Customer_detail: A view to show customer booking details.
-CREATE OR REPLACE VIEW CUSTOMER_DETAIL AS
-SELECT 
-    c.CUSTOMER_ID,
-    c.FIRST_NAME,
-    c.LAST_NAME,
-    c.EMAIL,
-    c.MOBILE_NO,
-    b.BOOKING_ID,
-    TO_CHAR(b.BOOKING_START_DATE, 'YYYY-MM-DD HH24:MI:SS') AS BOOKING_START_DATE,
-    TO_CHAR(b.BOOKING_END_DATE, 'YYYY-MM-DD HH24:MI:SS') AS BOOKING_END_DATE,
-    b.BOOKING_TOTAL_HOURS,
-    p.TOTAL_AMOUNT AS PAYMENT_AMOUNT,
-    p.PAYMENT_TYPE,
-    TO_CHAR(p.PAYMENT_DATE, 'YYYY-MM-DD') AS PAYMENT_DATE
-FROM 
-    CUSTOMER c
-JOIN 
-    BOOKING b ON c.CUSTOMER_ID = b.CUSTOMER_ID
-JOIN 
-    PAYMENT p ON b.BOOKING_ID = p.BOOKING_ID
-ORDER BY 
-    c.CUSTOMER_ID;
-    
-    
---  2) Space_review: A view to show customer ratings and reviews of a particular space.
-CREATE OR REPLACE VIEW SPACE_REVIEW AS
-SELECT 
-    s.SPACE_ID,
-    s.SPACE_TYPE,
-    s.SPACE_CAPACITY,
-    r.RATING,
-    r.COMMENTS
-FROM 
-    SPACE s
-LEFT JOIN 
-    REVIEW r ON s.SPACE_ID = r.SPACE_ID
-ORDER BY 
-    s.SPACE_ID;
-    
-
---  3) Available_space: A view to display spaces that are available.
-CREATE OR REPLACE VIEW AVAILABLE_SPACE AS
-SELECT 
-    s.SPACE_ID,
-    s.SPACE_TYPE,
-    s.SPACE_CAPACITY,
-    s.SPACE_PRICE,
-    s.STATUS,
-    b.BUILDING_NAME,
-    b.FLOOR_NUMBER
-FROM 
-    SPACE s
-JOIN 
-    BUILDING b ON s.BUILDING_ID = b.BUILDING_ID
-WHERE 
-    s.STATUS = 'Available'
-ORDER BY 
-    s.SPACE_ID;
-    
-
--- 4) Payment_chart: A view to display membership types and their prices.
-CREATE OR REPLACE VIEW PAYMENT_CHART AS
+-- 4)Payment_chart: A view to display membership types and their prices.
+CREATE OR REPLACE VIEW MEMBERSHIP_PAYMENT_CHART AS
 SELECT 
     m.MEMBERSHIP_ID,
     m.MEMBERSHIP_TYPE,
@@ -154,3 +93,34 @@ JOIN
     CUSTOMER c ON cm.CUSTOMER_ID = c.CUSTOMER_ID
 ORDER BY 
     m.MEMBERSHIP_ID, c.CUSTOMER_ID;
+
+
+---------- Customer View ----------
+
+-- 1) payment chart for customer
+
+CREATE OR REPLACE VIEW PAYMENT_CHART AS
+SELECT
+ DISTINCT(MEMBERSHIP_TYPE),
+         (MEMBERSHIP_PRICE)
+FROM 
+MEMBERSHIP;
+
+   
+    
+--  2) Space_review: A view to show customer ratings and reviews of a particular space.
+CREATE OR REPLACE VIEW SPACE_REVIEW AS
+SELECT 
+    s.SPACE_ID,
+    s.SPACE_TYPE,
+    s.SPACE_CAPACITY,
+    r.RATING,
+    r.COMMENTS
+FROM 
+    SPACE s
+LEFT JOIN 
+    REVIEW r ON s.SPACE_ID = r.SPACE_ID
+ORDER BY 
+    s.SPACE_ID;
+    
+ 
